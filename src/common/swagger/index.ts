@@ -7,3 +7,4 @@ export * from './user-by-id.response';
 export * from './update-user.response';
 export * from './delete-user.response';
 export * from './search.query';
+export * from './forbidden.response';
