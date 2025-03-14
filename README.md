@@ -89,3 +89,9 @@ La documentación de la API está generada con Swagger y puede ser accedida en:
 ```bash
 http://localhost:3000/api
 ```
+
+## Resultados de las Pruebas
+
+Aquí se muestran los resultados de la ejecución de las pruebas:
+
+![Resultados de los tests](./assets//tests.png)
