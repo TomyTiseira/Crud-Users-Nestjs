@@ -12,8 +12,7 @@ import {
   SetMetadata,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { PermissionsGuard } from '../../src/common/guards/permissions.guard';
-import { METADATA, PERMISSIONS } from '../../src/common/constants';
+import { METADATA, PERMISSIONS } from 'src/common/constants';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
@@ -27,7 +26,8 @@ import {
   UserCreatedResponse,
   UserListResponse,
   UserNotFoundResponse,
-} from '../../src/common/swagger';
+} from 'src/common/swagger';
+import { PermissionsGuard } from 'src/common/guards/permissions.guard';
 
 @ApiTags('users')
 @Controller('users')

@@ -7,7 +7,7 @@ import {
   UserAlreadyInactiveException,
   UserNotFoundException,
 } from './exceptions';
-import { ROLE_PERMISSIONS, ROLES } from '../common/constants';
+import { ROLE_PERMISSIONS, ROLES } from 'src/common/constants';
 
 @Injectable()
 export class UsersService {
