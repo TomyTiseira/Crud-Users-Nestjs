@@ -7,7 +7,7 @@ import {
   UserAlreadyInactiveException,
   UserNotFoundException,
 } from './exceptions';
-import { ROLE_PERMISSIONS, ROLES } from 'src/common/constants';
+import { ROLE_PERMISSIONS, ROLES } from '../common/constants';
 
 @Injectable()
 export class UsersService {
@@ -114,7 +114,7 @@ export class UsersService {
       },
     };
 
-    return user;
+    return this.users[userIndex];
   }
 
   /**
