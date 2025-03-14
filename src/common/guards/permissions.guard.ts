@@ -26,7 +26,7 @@ export class PermissionsGuard implements CanActivate {
 
     if (!user || !user.permissions) {
       throw new ForbiddenException(
-        ` User is not authenticated or does not have permissions`,
+        `User is not authenticated or does not have permissions`,
       );
     }
 
