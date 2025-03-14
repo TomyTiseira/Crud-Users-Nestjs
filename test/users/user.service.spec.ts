@@ -1,12 +1,10 @@
-// src/users/users.service.spec.ts
-
 import { Test, TestingModule } from '@nestjs/testing';
-import { CreateUserDto, UpdateUserDto } from '../../src/users/dto';
+import { CreateUserDto, UpdateUserDto } from 'src/users/dto';
 import {
   EmailIsInUseException,
   UserNotFoundException,
-} from '../../src/users/exceptions';
-import { UsersService } from '../../src/users/users.service';
+} from 'src/users/exceptions';
+import { UsersService } from 'src/users/users.service';
 
 describe('UsersService', () => {
   let service: UsersService;

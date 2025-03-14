@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UsersController } from '../../src/users/users.controller';
-import { UsersService } from '../../src/users/users.service';
-import { CreateUserDto, UpdateUserDto } from '../../src/users/dto';
-import { UserNotFoundException } from '../../src/users/exceptions';
+import { CreateUserDto, UpdateUserDto } from 'src/users/dto';
+import { UserNotFoundException } from 'src/users/exceptions';
+import { UsersController } from 'src/users/users.controller';
+import { UsersService } from 'src/users/users.service';
 
 describe('UsersController', () => {
   let controller: UsersController;
