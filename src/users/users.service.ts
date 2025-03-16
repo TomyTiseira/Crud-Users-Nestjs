@@ -8,27 +8,20 @@ import {
   UserNotFoundException,
 } from './exceptions';
 import { ROLE_PERMISSIONS, ROLES } from 'src/common/constants';
+import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UsersService {
-  private users: User[] = [];
-
-  /**
-   * Verificar si el email ya está en uso.
-   * @param email email a evaluar.
-   * @returns true si no está en uso, false en caso contrario.
-   */
-  private isEmailUnique = (email: string) => {
-    return !this.users.some((user) => user.email === email);
-  };
+  constructor(private readonly userRepository: UserRepository) {}
 
   /**
    * Crear un nuevo usuario en el array.
    * @param createUserDto Dto con los datos del usuario a crear.
    */
   create(createUserDto: CreateUserDto): User {
-    if (!this.isEmailUnique(createUserDto.email)) {
-      throw new EmailIsInUseException(); // email ya está en uso
+    // Verificar si el correo electrónico ya está en uso.
+    if (this.userRepository.isEmailInUse(createUserDto.email)) {
+      throw new EmailIsInUseException();
     }
 
     const newUser: User = {
@@ -45,28 +38,18 @@ export class UsersService {
       },
     };
 
-    this.users.push(newUser);
+    // this.users.push(newUser);
+    this.userRepository.save(newUser);
 
     return newUser;
   }
 
   /**
    * Obtener una lista de usuarios.
+   * @param search texto a buscar
    */
   findAll(search?: string): User[] {
-    return this.users.filter((user) => {
-      // Solo se muestran usuarios activos
-      if (!user.isActive) return false;
-
-      // Si no hay búsqueda, se muestran todos los usuarios activos
-      if (!search) return true;
-
-      // Si hay búsqueda, se muestra el usuario si el nombre o el email coinciden con la
-      return (
-        user.name.toLowerCase().includes(search.toLowerCase()) ||
-        user.email.toLowerCase().includes(search.toLowerCase())
-      );
-    });
+    return this.userRepository.findAll(search);
   }
 
   /**
@@ -74,10 +57,7 @@ export class UsersService {
    * @param id id del usuario a buscar.
    */
   findOne(id: string): User {
-    const user = this.users.find(
-      (user) => user.id === id && user.isActive === true,
-    );
-
+    const user = this.userRepository.findById(id);
     if (!user) throw new UserNotFoundException(); // No existe el usuario o está inactivo
 
     return user;
@@ -89,23 +69,18 @@ export class UsersService {
    * @param updateUserDto dto con los datos a actualizar del usuario.
    */
   update(id: string, updateUserDto: UpdateUserDto): User {
-    const userIndex = this.users.findIndex(
-      (user) => user.id === id && user.isActive === true,
-    );
+    const user = this.userRepository.findById(id);
+    if (!user) throw new UserNotFoundException(); // No existe el usuario o está inactivo
 
-    if (userIndex === -1) throw new UserNotFoundException(); // Usuario no encontrado
-
-    const user = this.users[userIndex];
-
+    // Validar que el email sea único
     if (
       updateUserDto.email &&
-      updateUserDto.email !== user.email &&
-      !this.isEmailUnique(updateUserDto.email)
+      this.userRepository.isEmailInUse(updateUserDto.email, id)
     ) {
-      throw new EmailIsInUseException(); // email ya está en uso
+      throw new EmailIsInUseException();
     }
 
-    this.users[userIndex] = {
+    const updatedUserData = {
       ...user,
       ...updateUserDto,
       profile: {
@@ -114,7 +89,9 @@ export class UsersService {
       },
     };
 
-    return this.users[userIndex];
+    this.userRepository.update(updatedUserData, id);
+
+    return updatedUserData;
   }
 
   /**
@@ -122,14 +99,12 @@ export class UsersService {
    * @param id id del usuario a eliminar
    */
   remove(id: string): User {
-    const userIndex = this.users.findIndex((user) => user.id === id);
-    if (userIndex === -1) throw new UserNotFoundException(); // Usuario no encontrado
-
-    const user = this.users[userIndex];
+    const user = this.userRepository.findById(id);
+    if (!user) throw new UserNotFoundException(); // No existe el usuario o está inactivo
 
     if (!user.isActive) throw new UserAlreadyInactiveException(); // Si el usuario ya está inactivo no se puede eliminar.
 
-    user.isActive = false; // Borrado lógico del usuario
+    this.userRepository.remove(id);
 
     return user;
   }
