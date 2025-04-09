@@ -9,6 +9,8 @@ async function bootstrap() {
   const logger = new Logger('users-main');
   const app = await NestFactory.create(AppModule);
 
+  // Prueba
+
   // configuración swagger
   const config = new DocumentBuilder()
     .setTitle('API de Usuarios')
