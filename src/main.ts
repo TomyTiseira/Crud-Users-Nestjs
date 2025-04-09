@@ -9,7 +9,7 @@ async function bootstrap() {
   const logger = new Logger('users-main');
   const app = await NestFactory.create(AppModule);
 
-  // Prueba
+  // Prueba 2
 
   // configuración swagger
   const config = new DocumentBuilder()
